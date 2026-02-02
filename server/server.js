@@ -2,6 +2,7 @@ const express = require('express');
 const http = require('http');
 const socketIO = require('socket.io');
 const path = require('path');
+const DrawingState = require('./drawing-state');
 
 const app = express();
 const server = http.createServer(app);
@@ -17,6 +18,7 @@ app.get('/', (req, res) => {
 
 // Store connected users
 const users = new Map();
+const drawingState = new DrawingState();
 
 io.on('connection', (socket) => {
     console.log('User connected:', socket.id);
