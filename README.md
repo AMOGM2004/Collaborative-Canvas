@@ -154,9 +154,11 @@ To see real-time collaboration in action:
 
 ---
 
-## 🤝 Contributing & Support 
-Contributions are welcome and greatly appreciated.
-If you find this project useful, please consider: - Starring ⭐ the repository
+## 🤝 Contributing & Support
+
+Contributions are welcome and appreciated. 
+
+If you find this project useful, you can star ⭐ the repository, fork 🍴 it, and submit pull requests for improvements or fixes.
 
 ---
 
