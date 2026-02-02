@@ -430,129 +430,71 @@ function updateUsersList() {
     userCountSpan.textContent = `${totalUsers} users online`;
 }
 
+// Initialize WebSocket event 
 // Initialize WebSocket event handlers
 function initWebSocketHandlers() {
-    // Handle initialization
-    wsClient.on('init', (data) => {
-        userId = data.userId;
-        userColor = data.color;
-        currentColor = userColor;
-        
-        console.log('User initialized:', userId, 'Color:', userColor);
-        
-        // Update UI
-        myColorSpan.style.backgroundColor = userColor;
-        changeColor(userColor);
-        updateConnectionStatus(true);
-        
-        // Draw existing strokes from server
-        if (data.strokes && data.strokes.length > 0) {
-            data.strokes.forEach(stroke => {
-                handleRemoteDrawing(stroke);
-            });
-            saveToHistory();
-        }
-        
-        // Add existing users
-        if (data.users) {
-            Object.entries(data.users).forEach(([id, user]) => {
-                if (id !== userId) {
-                    remoteCursors[id] = {
-                        userId: id,
-                        color: user.color,
-                        x: 0,
-                        y: 0,
-                        visible: false
-                    };
-                }
-            });
-            updateUsersList();
-        }
-    });
+  // Handle initialization
+  window.addEventListener('user-init', (e) => {
+    const data = e.detail;
+    userId = data.userId;
+    userColor = data.color;
+    currentColor = userColor;
     
-    // Handle connection events
-    wsClient.on('connected', () => {
-        updateConnectionStatus(true);
-    });
+    console.log('User initialized:', userId, 'Color:', userColor);
     
-    wsClient.on('disconnected', () => {
-        updateConnectionStatus(false);
-    });
+    // Update UI
+    myColorSpan.style.backgroundColor = userColor;
+    changeColor(userColor);
+    updateConnectionStatus(true);
+  });
+  
+  // Handle user connections
+  window.addEventListener('user-joined', (e) => {
+    const data = e.detail;
+    console.log('Remote user connected:', data.userId);
+    showNotification(`User ${data.userId.slice(0, 4)} joined`, 'success');
     
-    wsClient.on('connection-error', (error) => {
-        showNotification(`Connection error: ${error.message}`, 'error');
-    });
+    remoteCursors[data.userId] = {
+      userId: data.userId,
+      color: data.color,
+      x: 0,
+      y: 0,
+      visible: false
+    };
     
-    // Handle remote drawing
-    wsClient.on('remote-draw-start', (stroke) => {
-        handleRemoteDrawing(stroke);
-    });
-    
-    wsClient.on('remote-draw', (stroke) => {
-        handleRemoteDrawing(stroke);
-    });
-    
-    wsClient.on('remote-draw-end', (stroke) => {
-        handleRemoteDrawing(stroke);
-        // Save to history when remote stroke ends
-        saveToHistory();
-    });
-    
-    // Handle remote cursor movement
-    wsClient.on('remote-cursor-move', (data) => {
-        if (data.userId !== userId) {
-            remoteCursors[data.userId] = {
-                userId: data.userId,
-                color: data.cursor.color,
-                x: data.cursor.x,
-                y: data.cursor.y,
-                visible: data.cursor.visible
-            };
-            updateRemoteCursors();
-        }
-    });
-    
-    // Handle user connections
-    wsClient.on('user-connected', (data) => {
-        console.log('Remote user connected:', data.userId);
-        showNotification(`User ${data.userId.slice(0, 4)} joined`, 'success');
-        
-        remoteCursors[data.userId] = {
-            userId: data.userId,
-            color: data.color,
-            x: 0,
-            y: 0,
-            visible: false
-        };
-        
-        updateUsersList();
-    });
-    
-    wsClient.on('user-disconnected', (data) => {
-        console.log('Remote user disconnected:', data.userId);
-        showNotification(`User ${data.userId.slice(0, 4)} left`, 'warning');
-        
-        delete remoteCursors[data.userId];
-        updateRemoteCursors();
-    });
-    
-    // Handle color changes
-    wsClient.on('remote-color-change', (data) => {
-        if (remoteCursors[data.userId]) {
-            remoteCursors[data.userId].color = data.color;
-            updateRemoteCursors();
-        }
-    });
-    
-    // Handle canvas clear
-    wsClient.on('remote-clear-canvas', () => {
-        showNotification('Canvas cleared by another user', 'warning');
-        ctx.fillStyle = '#FFFFFF';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        saveToHistory();
-    });
+    updateUsersList();
+  });
+  
+  // Handle remote drawing
+  window.addEventListener('remote-draw', (e) => {
+    const stroke = e.detail;
+    // Handle drawing logic here...
+    handleRemoteDrawing(stroke);
+  });
+  
+  // Handle cursor movement
+  window.addEventListener('cursor-move', (e) => {
+    const data = e.detail;
+    if (data.userId !== userId) {
+      remoteCursors[data.userId] = {
+        userId: data.userId,
+        color: data.cursor.color || data.color || '#000000',
+        x: data.cursor.x,
+        y: data.cursor.y,
+        visible: data.cursor.visible !== false
+      };
+      updateRemoteCursors();
+    }
+  });
+  
+  // Handle canvas clear
+  window.addEventListener('clear-canvas', () => {
+    showNotification('Canvas cleared by another user', 'warning');
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    saveToHistory();
+  });
 }
-
 
 
 // Connection status management
