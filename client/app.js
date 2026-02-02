@@ -431,69 +431,45 @@ function updateUsersList() {
 }
 
 // Initialize WebSocket event handlers
-// Initialize WebSocket event handlers
 function initWebSocketHandlers() {
-  // Handle initialization
-  window.addEventListener('user-init', (e) => {
-    const data = e.detail;
-    userId = data.userId;
-    userColor = data.color;
-    currentColor = userColor;
+    // Handle initialization
+    wsClient.on('init', (data) => {
+        userId = data.userId;
+        userColor = data.color;
+        currentColor = userColor;
+        
+        console.log('User initialized:', userId, 'Color:', userColor);
+        
+        // Update UI
+        myColorSpan.style.backgroundColor = userColor;
+        changeColor(userColor);
+        updateConnectionStatus(true);
+        
+        // Draw existing strokes from server
+        if (data.strokes && data.strokes.length > 0) {
+            data.strokes.forEach(stroke => {
+                handleRemoteDrawing(stroke);
+            });
+            saveToHistory();
+        }
+        
+        // Add existing users
+        if (data.users) {
+            Object.entries(data.users).forEach(([id, user]) => {
+                if (id !== userId) {
+                    remoteCursors[id] = {
+                        userId: id,
+                        color: user.color,
+                        x: 0,
+                        y: 0,
+                        visible: false
+                    };
+                }
+            });
+            updateUsersList();
+        }
+    });
     
-    console.log('User initialized:', userId, 'Color:', userColor);
-    
-    // Update UI
-    myColorSpan.style.backgroundColor = userColor;
-    changeColor(userColor);
-    updateConnectionStatus(true);
-  });
-  
-  // Handle user connections
-  window.addEventListener('user-joined', (e) => {
-    const data = e.detail;
-    console.log('Remote user connected:', data.userId);
-    showNotification(`User ${data.userId.slice(0, 4)} joined`, 'success');
-    
-    remoteCursors[data.userId] = {
-      userId: data.userId,
-      color: data.color,
-      x: 0,
-      y: 0,
-      visible: false
-    };
-    
-    updateUsersList();
-  });
-  
-  // Handle remote drawing
-  window.addEventListener('remote-draw', (e) => {
-    const stroke = e.detail;
-    // Handle drawing logic here...
-    handleRemoteDrawing(stroke);
-  });
-  
-  // Handle cursor movement
-  window.addEventListener('cursor-move', (e) => {
-    const data = e.detail;
-    if (data.userId !== userId) {
-      remoteCursors[data.userId] = {
-        userId: data.userId,
-        color: data.cursor.color || data.color || '#000000',
-        x: data.cursor.x,
-        y: data.cursor.y,
-        visible: data.cursor.visible !== false
-      };
-      updateRemoteCursors();
-    }
-  });
-
-   window.addEventListener('clear-canvas', () => {
-    showNotification('Canvas cleared by another user', 'warning');
-    ctx.fillStyle = '#FFFFFF';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    saveToHistory();
-  });
-}
     // Handle connection events
     wsClient.on('connected', () => {
         updateConnectionStatus(true);
@@ -750,48 +726,3 @@ function init() {
 
 // Start the app when DOM is loaded
 document.addEventListener('DOMContentLoaded', init);
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('🎨 Initializing Collaborative Canvas App...');
-    
-    // Initialize WebSocket client
-    window.wsClient = new WebSocketClient();
-    
-    // Initialize drawing canvas
-    window.drawingCanvas = new DrawingCanvas();
-    
-    // Check initialization after 1 second
-    setTimeout(() => {
-        if (window.wsClient.userId) {
-            console.log('✅ App initialized successfully!');
-            console.log('👤 Your User ID:', window.wsClient.userId);
-            console.log('🎨 Your Color:', window.wsClient.userColor);
-        }
-    }, 1000);
-});
-
-// Keyboard shortcuts
-document.addEventListener('keydown', (e) => {
-    if (!window.drawingCanvas) return;
-    
-    // Ctrl+Z for undo
-    if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
-        e.preventDefault();
-        window.drawingCanvas.undo();
-    }
-    
-    // Ctrl+Y for redo
-    if ((e.ctrlKey || e.metaKey) && e.key === 'y') {
-        e.preventDefault();
-        window.drawingCanvas.redo();
-    }
-    
-    // B for brush
-    if (e.key === 'b' || e.key === 'B') {
-        window.drawingCanvas.setTool('brush');
-    }
-    
-    // E for eraser
-    if (e.key === 'e' || e.key === 'E') {
-        window.drawingCanvas.setTool('eraser');
-    }
-});
