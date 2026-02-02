@@ -1,4 +1,4 @@
-# Collaborative Drawing Canvas
+#🎨 Collaborative Drawing Canvas
 
 A real-time collaborative drawing application where multiple users can draw simultaneously on the same canvas.
 
@@ -17,6 +17,19 @@ A real-time collaborative drawing application where multiple users can draw simu
 - Mobile and touch device support
 - Clean and intuitive UI
 
+## 🛠️ Technologies Used
+
+## Frontend
+- HTML5 Canvas
+- Vanilla JavaScript
+- CSS3
+Backend
+Node.js
+Express.js
+Socket.io
+Real-Time Communication
+WebSockets via Socket.io
+
 ## Setup Instructions
 
 ### Prerequisites
@@ -25,7 +38,6 @@ A real-time collaborative drawing application where multiple users can draw simu
 
 ### Installation
 
-1. Clone the repository:
-```bash
+
 git clone <repository-url>
 cd collaborative-canvas
