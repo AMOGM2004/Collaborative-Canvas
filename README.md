@@ -1,20 +1,19 @@
 ## 🎨 Collaborative Drawing Canvas
-
-A real-time collaborative drawing application where multiple users can draw simultaneously on the same canvas.
+A real-time collaborative drawing application where multiple users can draw simultaneously on a shared canvas. Built using HTML5 Canvas, Node.js, and Socket.io, this project demonstrates real-time communication using WebSockets with a clean and intuitive user experience.
 
 ---
-
-## Features
-- Real-time drawing synchronization
-- Multiple drawing tools (brush, eraser)
-- Adjustable brush size and colors
-- Undo/Redo functionality
-- Online user indicators
-- Mobile touch support
+## ✨ Features
+## 🖌 Core Functionality
+- Real-time drawing synchronization across all connected users
+- Brush and Eraser tools
+- Adjustable brush size
+- Individual color selection per user
+- Live cursor tracking with user labels
+- Canvas clear action synchronized for everyone
  
 ---
 
-## User Experience
+## 👥 User Experience
 - User join/leave notifications
 - Connection status indicator
 - Responsive layout
@@ -24,20 +23,11 @@ A real-time collaborative drawing application where multiple users can draw simu
 ---
 
 ## 🛠️ Technologies Used
+- Frontend : HTML, Canvas, JavaScript, CSS3  
+- Backend : Node.js, Express.js ,Socket.io
+- Real-Time Communication : WebSockets via Socket.io
 
-## Frontend
-- HTML5 Canvas
-- Vanilla JavaScript
-- CSS3
-  
-## Backend
-- Node.js
-- Express.js
-- Socket.io
-  
-## Real-Time Communication
-- WebSockets via Socket.io
-
+---
 
 ## 📁 Project Structure
 ```
@@ -72,11 +62,11 @@ Check versions:
 
 ## 📦 Installation
 
-Clone the repository : git clone https://github.com/AMOGM2004/collaborative-canvas.git
-Navigate to the project folder : cd collaborative-canvas
-Install dependencies : npm install
-Start the server and run the application : npm start
-For development (auto-restart on changes): npm run dev
+- Clone the repository : git clone https://github.com/AMOGM2004/collaborative-canvas.git
+- Navigate to the project folder : cd collaborative-canvas
+- Install dependencies : npm install
+- Start the server and run the application : npm start
+- For development (auto-restart on changes): npm run dev
 
 Open your browser and visit: 
 http://localhost:3000
