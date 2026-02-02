@@ -726,3 +726,48 @@ function init() {
 
 // Start the app when DOM is loaded
 document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('🎨 Initializing Collaborative Canvas App...');
+    
+    // Initialize WebSocket client
+    window.wsClient = new WebSocketClient();
+    
+    // Initialize drawing canvas
+    window.drawingCanvas = new DrawingCanvas();
+    
+    // Check initialization after 1 second
+    setTimeout(() => {
+        if (window.wsClient.userId) {
+            console.log('✅ App initialized successfully!');
+            console.log('👤 Your User ID:', window.wsClient.userId);
+            console.log('🎨 Your Color:', window.wsClient.userColor);
+        }
+    }, 1000);
+});
+
+// Keyboard shortcuts
+document.addEventListener('keydown', (e) => {
+    if (!window.drawingCanvas) return;
+    
+    // Ctrl+Z for undo
+    if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+        e.preventDefault();
+        window.drawingCanvas.undo();
+    }
+    
+    // Ctrl+Y for redo
+    if ((e.ctrlKey || e.metaKey) && e.key === 'y') {
+        e.preventDefault();
+        window.drawingCanvas.redo();
+    }
+    
+    // B for brush
+    if (e.key === 'b' || e.key === 'B') {
+        window.drawingCanvas.setTool('brush');
+    }
+    
+    // E for eraser
+    if (e.key === 'e' || e.key === 'E') {
+        window.drawingCanvas.setTool('eraser');
+    }
+});
