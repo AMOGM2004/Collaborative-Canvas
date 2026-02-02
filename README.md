@@ -1,4 +1,4 @@
-#🎨 Collaborative Drawing Canvas
+## 🎨 Collaborative Drawing Canvas
 
 A real-time collaborative drawing application where multiple users can draw simultaneously on the same canvas.
 
@@ -9,13 +9,16 @@ A real-time collaborative drawing application where multiple users can draw simu
 - Undo/Redo functionality
 - Online user indicators
 - Mobile touch support
-
+- 
+---
 ##User Experience
 - User join/leave notifications
 - Connection status indicator
 - Responsive layout
 - Mobile and touch device support
 - Clean and intuitive UI
+
+---
 
 ## 🛠️ Technologies Used
 
