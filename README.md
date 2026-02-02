@@ -111,7 +111,12 @@ npm -v
 
 ## ⚙️ Installation
 
-### 1. Clone the Repository
+#### Option 1 : 📥 Download the Project
+1. Click the **Code** button on this repository
+2. Select **Download ZIP**
+3. Extract the ZIP file
+
+#### Option 2 :  Clone the Repository
 
 Open your terminal and run the following commands:
 ```bash
